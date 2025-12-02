@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
     yearSpan.textContent = new Date().getFullYear();
   }
 
-  // --- Scroll reveal animations ---
+  // --- Scroll reveal animations (optional, safe if classes don’t exist) ---
   const revealEls = document.querySelectorAll(
     ".reveal-up, .reveal-left, .reveal-right, .reveal-fade"
   );
@@ -53,7 +53,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     revealEls.forEach(el => observer.observe(el));
   } else if (revealEls.length) {
-    // Fallback: show everything if browser doesn't support IntersectionObserver
     revealEls.forEach(el => el.classList.add("reveal-visible"));
   }
 
@@ -61,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const surveyForm = document.getElementById("siteSurveyForm");
   if (surveyForm) {
     surveyForm.addEventListener("submit", (e) => {
-      e.preventDefault(); // don't reload page
+      e.preventDefault(); // stop normal form submit (no refresh)
 
       const name = (document.getElementById("name")?.value || "").trim();
       const phone = (document.getElementById("phone")?.value || "").trim();
@@ -76,12 +75,14 @@ document.addEventListener("DOMContentLoaded", () => {
       if (service)   text += `Service Type: ${service}\n`;
       if (details)   text += `\nDetails:\n${details}\n`;
 
-      // Nigerian WhatsApp number in international format (no leading 0, no '+')
+      // Nigerian WhatsApp number in international format (no '+' and no leading 0)
       const whatsappNumber = "2347038947737";
+
+      // Navigate current tab to WhatsApp
       const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
 
-      // Open WhatsApp (mobile app or WhatsApp Web)
-      window.open(url, "_blank");
+      console.log("Redirecting to WhatsApp:", url); // helpful when testing on laptop
+      window.location.href = url;
     });
   }
 });
